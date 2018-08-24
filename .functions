@@ -290,3 +290,24 @@ function extract {
         fi
     done
 }
+
+# Empty the trash
+#
+# By default, deletes anything more than a week old
+# Accepts an optional argument to change the length of time
+# See the `-atime` section of `man find` for more information
+#
+# Usage: empty [[+-]n[smhdw]]
+function empty {
+    # Default to anything older than 1 week
+    local mtime='+1w'
+
+    # Accept optional mtime flag
+    if [[ "$1" ]]
+    then
+        mtime="$1"
+    fi
+
+    # Delete the old files
+    find ~/.Trash/* -depth -mtime "$mtime" -exec rm -rf '{}' \;
+}
