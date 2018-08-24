@@ -1,106 +1,128 @@
-" Use the Solarized Dark theme
-set background=dark
-colorscheme solarized
-let g:solarized_termtrans=1
+" Global vim settings for all file types
+"
+" See ~/.vim/colors/   for additional color scheme files
+" See ~/.vim/ftplugin/ for language specific settings
+" See ~/.vim/ftdetect/ for language specific file type detection
+" See ~/.vim/indent/   for language specific indentation
+" See ~/.vim/spell/    for spell check files
+"
+" See ':help vimfiles' for a description of the .vim file hierarchy
 
-" Make Vim more useful
-set nocompatible
-" Use the OS clipboard by default (on versions compiled with `+clipboard`)
-set clipboard=unnamed
-" Enhance command-line completion
-set wildmenu
-" Allow cursor keys in insert mode
-set esckeys
-" Allow backspace in insert mode
-set backspace=indent,eol,start
-" Optimize for fast terminal connections
-set ttyfast
-" Add the g flag to search/replace by default
-set gdefault
-" Use UTF-8 without BOM
-set encoding=utf-8 nobomb
-" Change mapleader
-let mapleader=","
-" Don’t add empty newlines at the end of files
-set binary
-set noeol
-" Centralize backups, swapfiles and undo history
-set backupdir=~/.vim/backups
-set directory=~/.vim/swaps
-if exists("&undodir")
-	set undodir=~/.vim/undo
+" Compatibility
+set nocompatible                " disable vi compatibility mode, must be done first
+set backspace=indent,eol,start  " allow backspacing over everything in insert mode
+set mousefocus                  " window focus follows mouse
+set mousehide                   " hide mouse pointer when characters are typed
+set history=50                  " keep 50 lines of command line history
+
+" In many terminal emulators the mouse works just fine, thus enable it.
+"if has('mouse')
+"    set mouse=a
+"endif
+
+" Color and Style
+if &t_Co > 2 || has("gui_running")
+    syntax enable               " enable syntax highlighting
+    set hlsearch                " highlight search results
+    colorscheme monokai         " use color scheme in ~/.vim/colors
 endif
 
-" Don’t create backups when editing files in certain directories
-set backupskip=/tmp/*,/private/tmp/*
+" Window Splitting
+" TODO: read https://robots.thoughtbot.com/vim-splits-move-faster-and-more-naturally
 
-" Respect modeline in files
-set modeline
-set modelines=4
-" Enable per-directory .vimrc files and disable unsafe commands in them
-set exrc
-set secure
-" Enable line numbers
-set number
-" Enable syntax highlighting
-syntax on
-" Highlight current line
-set cursorline
-" Make tabs as wide as two spaces
-set tabstop=2
-" Show “invisible” characters
-set lcs=tab:▸\ ,trail:·,eol:¬,nbsp:_
-set list
-" Highlight searches
-set hlsearch
-" Ignore case of searches
-set ignorecase
-" Highlight dynamically as pattern is typed
-set incsearch
-" Always show status line
-set laststatus=2
-" Enable mouse in all modes
-set mouse=a
-" Disable error bells
-set noerrorbells
-" Don’t reset cursor to start of line when moving around.
-set nostartofline
-" Show the cursor position
-set ruler
-" Don’t show the intro message when starting Vim
-set shortmess=atI
-" Show the current mode
-set showmode
-" Show the filename in the window titlebar
-set title
-" Show the (partial) command as it’s being typed
-set showcmd
-" Use relative line numbers
-if exists("&relativenumber")
-	set relativenumber
-	au BufReadPost * set relativenumber
-endif
-" Start scrolling three lines before the horizontal window border
-set scrolloff=3
+" Display Line Numbers
+"set number                      " display line numbers
+set ruler                       " display cursor position
+"set title                       " terminal title becomes filename being edited
+"set titleold=""                 " return terminal title to normal value upon exiting
 
-" Strip trailing whitespace (,ss)
-function! StripWhitespace()
-	let save_cursor = getpos(".")
-	let old_query = getreg('/')
-	:%s/\s\+$//e
-	call setpos('.', save_cursor)
-	call setreg('/', old_query)
-endfunction
-noremap <leader>ss :call StripWhitespace()<CR>
-" Save a file as root (,W)
-noremap <leader>W :w !sudo tee % > /dev/null<CR>
+" Searching Criteria
+set ignorecase                  " ignore case in search patterns
+set smartcase                   " override ignorecase if search pattern has capital letters
+set wildmode=longest,list       " list all matches
+set showmatch                   " highlight matching parentheses/brackets
+set incsearch                   " show matches while typing pattern
 
-" Automatic commands
+" Spell Checking
+" Use ':set spell' and ':set nospell' to turn spell checking on/off
+set spelllang=en_us
+
+" Scrolling and Mouse Control
+set scrolloff=10                " keep at least x lines above/below cursor if possible
+set whichwrap+=<,>,[,],h,l      " <Left>, <Right>, h, and l wrap around line breaks
+set nostartofline               " don't reset cursor to start of line when moving around
+
+" Word Wrap
+"set wrap                        " wrap visually instead of changing text in buffer
+"set linebreak                   " only wrap at characters listed in the breakat option
+"set nolist                      " list disables linebreaks
+
+" Indentation
+set autoindent                  " copy indentation from current line when starting new line
+set copyindent                  " copy structure of indentation from previous line, e.g. comment symbols
+set expandtab                   " <Tab> inserts softtabstop spaces. Use <Ctrl>-V <Tab> to get real tab
+set tabstop=8                   " number of spaces that an existing <Tab> displays as
+set softtabstop=4               " number of spaces to insert when the <Tab> key is pressed
+set shiftwidth=4                " number of spaces to use for each auto-indent, e.g. >>, << commands
+
+" Key Remaps
+nmap <silent> ,/ :nohlsearch<CR>
+nnoremap ; :
+
+" Automatically add closing bracket and indent properly
+"inoremap {<cr> {<cr>}<c-o>O<tab>
+"inoremap [<cr> [<cr>]<c-o>O<tab>
+"inoremap (<cr> (<cr>)<c-o>O<tab>
+
+" Make searches always 'very magic'
+"nnoremap / /\v
+"cnoremap %s/ %s/\v
+
+" Only do this part when compiled with support for autocommands.
 if has("autocmd")
-	" Enable file type detection
-	filetype on
-	" Treat .json files as .js
-	autocmd BufNewFile,BufRead *.json setfiletype json syntax=javascript
-	" Treat .md files as Markdown
-	autocmd BufNewFile,BufRead *.md setlocal filetype=markdown
+    " Enable file type plugin and detection overrides in ~/.vim/
+    filetype plugin on
+
+    " Read a skeleton (template) file when opening a new file
+    autocmd BufNewFile *.pbs 0r ~/.vim/skeletons/skeleton.pbs
+    autocmd BufNewFile *.pl  0r ~/.vim/skeletons/skeleton.pl
+    autocmd BufNewFile *.py  0r ~/.vim/skeletons/skeleton.py
+    autocmd BufNewFile *.rb  0r ~/.vim/skeletons/skeleton.rb
+    autocmd BufNewFile *.sh  0r ~/.vim/skeletons/skeleton.sh
+
+    " When editing a file, always jump to the last known cursor position.
+    " Don't do it when the position is invalid or when inside an event handler
+    " (happens when dropping a file on gvim).
+    " Also don't do it when the mark is in the first line, that is the default
+    " position when opening a file.
+    autocmd BufReadPost *
+        \ if line("'\"") > 1 && line("'\"") <= line("$") |
+        \     exe "normal! g`\"" |
+        \ endif
+
+    " Whitespace Handling
+    function! StripTrailingWhitespaces()
+        " Save current cursor position
+        let l = line(".")
+        let c = col(".")
+        " Save search history
+        let s = @/
+        " Delete trailing whitespaces
+        %s/\s\+$//e
+        " Return cursor to previous position
+        call cursor(l, c)
+        " Restore search history
+        let @/ = s
+    endfunction
+    
+    " Clear searches when opening file
+    autocmd BufReadPre <buffer> :let @/ = ""
+endif
+
+" Convenient command to see the difference between the current buffer and the
+" file it was loaded from, thus the changes you made.
+" Only define it when not defined already.
+if !exists(":DiffOrig")
+    command DiffOrig vert new | set bt=nofile | r # | 0d_ | diffthis
+        \ | wincmd p | diffthis
 endif

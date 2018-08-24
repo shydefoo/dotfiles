@@ -58,7 +58,7 @@
 
 	# Remove branches that have already been merged with master
 	# a.k.a. ‘delete merged’
-	dm = "!git branch --merged | grep -v '\\*' | xargs -n 1 git branch -d"
+	# dm = "!git branch --merged | grep -v '\\*' | xargs -n 1 git branch -d"
 
 	# List contributors with number of commits
 	contributors = shortlog --summary --numbered
@@ -128,19 +128,21 @@
 
 [color "status"]
 
-	added = yellow
-	changed = green
-	untracked = cyan
+	added = green
+	changed = yellow
+	untracked = red
 
-[commit]
+# [commit]
 
-	# https://help.github.com/articles/signing-commits-using-gpg/
-	gpgsign = true
+# 	# https://help.github.com/articles/signing-commits-using-gpg/
+# 	gpgsign = true
 
 [diff]
 
 	# Detect copies as well as renames
 	renames = copies
+    # Use vimdiff as the default difftool
+    tool = vimdiff
 
 [diff "bin"]
 
@@ -185,3 +187,9 @@
 [url "git://gist.github.com/"]
 
 	insteadOf = "gist:"
+
+[user]
+
+    # Set user commit information
+    email = shidefoo@gmail.com
+    name = shydefoo
