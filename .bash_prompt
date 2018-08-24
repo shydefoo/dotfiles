@@ -61,6 +61,16 @@ prompt_git() {
 	fi;
 }
 
+check_conda_env()
+{
+    if [ ! -z "$CONDA_DEFAULT_ENV" ]; then
+        #printf -- "%s" "\[\e[0;35m\][`basename $CONDA_DEFAULT_ENV`]\[\e[0m\] "
+        #echo "\e[0;37m(\e[4;32m$CONDA_DEFAULT_ENV\e[0;37m)"
+        echo -e "${1}$CONDA_DEFAULT_ENV${2}${s}";
+        #post="$reset\n\$ "
+    fi
+}
+
 if tput setaf 1 &> /dev/null; then
 	tput sgr0; # reset colors
 	bold=$(tput bold);
@@ -106,13 +116,17 @@ else
 fi;
 
 # Set the terminal title and prompt.
-PS1="\[\033]0;\W\007\]"; # working directory base name
-PS1+="\[${bold}\]\n"; # newline
+
+PS1="\[${bold}\]\n"; # newline
+PS1+="\[\033]0;\W\007\]"; # working directory base name
+PS1+="\[${white}\][";
+PS1+="\[${blue}\]\d";
+PS1+="\[${white}\]]";
 PS1+="\[${userStyle}\]\u"; # username
-PS1+="\[${white}\] at ";
+PS1+="\[${white}\]@";
 PS1+="\[${hostStyle}\]\h"; # host
-PS1+="\[${white}\] in ";
-PS1+="\[${green}\]\w"; # working directory full path
+PS1+="\[${white}\] ~> ";
+PS1+="\[${green}\]\W"; # working directory full path
 PS1+="\$(prompt_git \"\[${white}\] on \[${violet}\]\" \"\[${blue}\]\")"; # Git repository details
 PS1+="\n";
 PS1+="\[${white}\]\$ \[${reset}\]"; # `$` (and reset color)
