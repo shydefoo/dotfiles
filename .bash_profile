@@ -1,6 +1,6 @@
 # Add `~/bin` to the `$PATH`
 export PATH="$HOME/bin:$PATH";
-export PATH="$HOME/anaconda3/bin:$PATH";
+export PATH="$HOME:$PATH":$HOME/miniconda3/bin;
 # Load the shell dotfiles, and then some:
 # * ~/.path can be used to extend `$PATH`.
 # * ~/.extra can be used for other settings you don’t want to commit.
@@ -49,8 +49,14 @@ complete -o "nospace" -W "Contacts Calendar Dock Finder Mail Safari iTunes Syste
 
 # Setting PATH for Python 3.7
 # The original version is saved in .bash_profile.pysave
-PATH="/Library/Frameworks/Python.framework/Versions/3.7/bin:${PATH}"
-export PATH
+#PATH="/Library/Frameworks/Python.framework/Versions/3.7/bin:${PATH}"
+#export PATH
 
 # added by Anaconda3 5.2.0 installer
-export PATH="/Users/Shide/anaconda3/bin:$PATH"
+#export PATH="/Users/Shide/anaconda3/bin:$PATH"
+export PATH="/usr/local/opt/mysql@5.7/bin:$PATH"
+
+# Setting PATH for Python 3.7
+# The original version is saved in .bash_profile.pysave
+PATH="/Library/Frameworks/Python.framework/Versions/3.7/bin:${PATH}"
+export PATH
