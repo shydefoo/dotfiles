@@ -8,3 +8,9 @@ done
 # for trackpad scroll script
 var=trackpad_scroll.scpt
 ln -sf $(pwd)/$var ~/.$var
+
+files=('.gitattributes' '.gitconfig' '.gitignore')
+for i in "${files[@]}"
+do
+	ln -sf $(pwd)/$i ~/$i
+done
